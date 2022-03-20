@@ -7,6 +7,7 @@ class Grade {
   }
   showMe() {
     if (--this.time > 0) {
+      fill('white');
       textSize(14);
       text(this.grade.toString(), this.x, this.y);
     }

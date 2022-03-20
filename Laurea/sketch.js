@@ -13,7 +13,9 @@ let i,
   backgroundImage,
   subjects = [],
   projectiles = [],
-  grades = [];
+  grades = [],
+  sentinel1 = true;
+  sentinel2 = true;
 let subs = [
   "Geometria&Algebra",
   "Informatica 1",
@@ -101,6 +103,7 @@ function draw() {
   projectilesMove();
   hit();
   gradesShow();
+  upgrade();
 }
 
 function lifeCheck() {
@@ -142,18 +145,34 @@ function projectilesMove() {
   }
 }
 
-function shoot(x, y, speed, damage, size) {
-  projectiles.push(new Projectile(x, y, speed, damage, size));
+function shoot(x, y, speed, damage, size, myColor) {
+  projectiles.push(new Projectile(x, y, speed, damage, size, myColor));
 }
 
 function finish() {
   song.stop();
   rick.play();
-  text("Voto: " + (Math.round((vlad.media * 110) / 30) + 3).toString(), 50, 50);
+  fill('white');
+  text("Voto: " + (Math.round((vlad.media * 110) / 30) + 5).toString(), 50, 50);
   setTimeout(
     (window.location = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"),
     5000
   );
+} 
+
+function upgrade(){
+  if(vlad.crediti>=60 && vlad.crediti<120 && sentinel1==true){
+    vlad.projectileSpeed=12;
+    vlad.projectileColor='blue';
+    console.log('upgrade');
+    sentinel1=false;
+  }
+  if(vlad.crediti>=120 && vlad.crediti<=180 && sentinel2==true){
+    vlad.projectileSize=45;
+    vlad.projectileColor='red';
+    console.log('upgrade');
+    sentinel2=false;
+  }
 }
 
 function gradesShow() {

@@ -1,11 +1,11 @@
 class Vlad {
   constructor(img) {
-    this.pointX = 0;
-    this.pointY = 0;
+    this.pointX = 250;
+    this.pointY = 450;
     this.dx = 0;
     this.dy = 0;
-    this.x = 500;
-    this.y = 500;
+    this.x = 250;
+    this.y = 450;
     this.xscaling = 0.75;
     this.yscaling = 0.9;
     this.slow = 0.05;
@@ -16,12 +16,13 @@ class Vlad {
     this.projectileSpeed = 5;
     this.projectileDamage = 1;
     this.projectileSize = 25;
+    this.projectileColor = 'white';
     this.sec = second();
   }
 
   move() {
     this.pointX = mouseX;
-    this.pointY = mouseY > height / 2 ? mouseY : this.pointY;
+    this.pointY = mouseY > height / 1.5 ? mouseY : this.pointY;
     this.dx = this.pointX - this.x;
     this.dy = this.pointY - this.y;
     this.x += this.dx * this.slow;
@@ -35,7 +36,8 @@ class Vlad {
         this.y - (100 * this.yscaling) / 2,
         this.projectileSpeed,
         this.projectileDamage,
-        this.projectileSize
+        this.projectileSize,
+        this.projectileColor
       );
     }
 
