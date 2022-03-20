@@ -49,12 +49,12 @@ class Vlad {
   }
 
   calculate(esame) {
-    esame.voto=esame.randomGrade();
+    esame.voto = esame.randomGrade();
     this.passed.push(esame);
     this.crediti += esame.credit;
     this.media = 0;
     tmp = 0;
-    grades.push(new Grade(subjects[actual].x,subjects[actual].y,esame.voto));
+    grades.push(new Grade(subjects[actual].x, subjects[actual].y, esame.voto));
     for (k = 0; k < this.passed.length; k++) {
       this.media += this.passed[k].credit * this.passed[k].voto;
       tmp += this.passed[k].credit;
