@@ -1,52 +1,103 @@
-let i,j,tmp,actual;
-let img,img1,img2,img3;
-let subs = ['Geometria&Algebra', 'Informatica 1', 'Analisi 1', 'Inglese','Informatica 2' ,'Reti Logiche', 'Analisi 2', 'Fisica', 'Matematica Applicata', 'Sistemi Informativi', 'Calcolatori', 'Elettrotecnica', 'Economia', 'Sistemi Operativi', 'Telecomunicazioni', 'Elettronica', 'Reti Calcolatori', 'Tekweb', 'Controlli', 'Tirocinio', 'Diritto', 'Sicurezza', 'Ingegneria Software', 'Tesi'];
-let levels = [0, 1, 2, 0, 1, 2, 2, 0, 1, 1, 2, 0, 0, 1, 2, 0, 1, 1, 2, 0, 0, 1, 1, 0];
-let semesters = [1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 6];
-let subjects = [];
-let projectiles = [];
-let vlad;
+let i, j, k, tmp, actual, song, rick, vlad, img, img1, img2, img3, backgroundImage, subjects = [], projectiles = [], grades = [];
+let subs = [
+  "Geometria&Algebra",
+  "Informatica 1",
+  "Analisi 1",
+  "Inglese",
+  "Informatica 2",
+  "Reti Logiche",
+  "Analisi 2",
+  "Fisica",
+  "Matematica Applicata",
+  "Sistemi Informativi",
+  "Calcolatori",
+  "Elettrotecnica",
+  "Economia",
+  "Sistemi Operativi",
+  "Telecomunicazioni",
+  "Elettronica",
+  "Reti Calcolatori",
+  "Tekweb",
+  "Controlli",
+  "Tirocinio",
+  "Diritto",
+  "Sicurezza",
+  "Ingegneria Software",
+  "Tesi",
+];
+let levels = [
+  0, 1, 2, 0, 1, 2, 2, 0, 1, 1, 2, 0, 0, 1, 2, 0, 1, 1, 2, 0, 0, 1, 1, 0,
+];
+let semesters = [
+  1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 6,
+];
+let credits = [
+  6, 12, 9, 6, 12, 6, 6, 9, 6, 9, 6, 6, 6, 9, 9, 6, 9, 9, 9, 6, 6, 6, 9, 3,
+];
+
 function preload() {
   img = loadImage("img/photo.png");
   img1 = loadImage("img/1.png");
   img2 = loadImage("img/2.png");
   img3 = loadImage("img/3.png");
+  backgroundImage = loadImage("img/backgroundImage.jpg");
+  song = loadSound('assets/song.mp3');
+  rick = loadSound('assets/rick.mp3');
 }
 
-function initMe(){
-  for(i=0;i<subs.length;i++){
-    subjects[i] = new Subject(subs[i], semesters[i], levels[i], levels[i]==0 ? img1 : levels[i]==1 ? img2 : img3);
+function initMe() {
+  for (i = 0; i < subs.length; i++) {
+    subjects[i] = new Subject(
+      subs[i],
+      semesters[i],
+      levels[i],
+      levels[i] == 0 ? img1 : levels[i] == 1 ? img2 : img3,
+      credits[i]
+    );
   }
   vlad = new Vlad(img);
-  actual=0;
+  actual = 0;
 }
 
 function setup() {
   createCanvas(500, 500);
   initMe();
+  song.play();
+  rick.stop();
 }
 
 function draw() {
-  background(0);
-  fill('white');
-  text('Media: ' + vlad.score.toString() +'\n'+ 'Crediti:' + vlad.crediti.toString(), 400, 450);
+  background(backgroundImage);
+  if (vlad.crediti >= 180) {
+    finish();
+  }
+  fill("white");
+  text(
+    "Media: " +
+      (Math.round(vlad.media * 100) / 100).toString() +
+      "\n" +
+      "Crediti:" +
+      vlad.crediti.toString(),
+    400,
+    450
+  );
   vlad.move();
   subjects[actual].move();
-  projectilesCheck();
+  projectilesMove();
   hit();
+  gradesShow();
 }
 
-function lifeCheck(){
-  if(subjects[actual].life<=0 && actual<subjects.length){
-    vlad.crediti+=subjects[actual].randomGrade();
+function lifeCheck() {
+  if (subjects[actual].life <= 0) {
+    vlad.calculate(subjects[actual]);
     actual++;
   }
 }
 
-function hit(){
-  for(j=0;j<projectiles.length;j++){
-    if(sqrt((projectiles[j].x-subjects[actual].x+50)+(projectiles[j].y-subjects[actual].y+50))<75 && projectiles[j].sec != second()){
-      vlad.score+=1;
+function hit() {
+  for (j = 0; j < projectiles.length; j++) {
+    if(dist(projectiles[j].x,projectiles[j].y,subjects[actual].x,subjects[actual].y)<(projectiles[j].size+subjects[j].size)){
       subjects[actual].life-=1;
       projectiles.splice(j, 1);
       lifeCheck();
@@ -54,90 +105,32 @@ function hit(){
   }
 }
 
-function projectilesCheck(){
-  for(i=0;i<projectiles.length;i++){
+function projectilesMove() {
+  for (i = 0; i < projectiles.length; i++) {
     projectiles[i].move();
+    if (
+      projectiles[i].x <= 0 ||
+      projectiles[i].x >= width ||
+      projectiles[i].y <= 0 ||
+      projectiles[i].x >= height
+    ) {
+      projectiles.splice(i, 1);
+    }
   }
 }
 
-function shoot(x,y,speed,damage,size){
-  projectiles.push(new Projectile(x,y,speed,damage,size));
+function shoot(x, y, speed, damage, size) {
+  projectiles.push(new Projectile(x, y, speed, damage, size));
 }
 
-class Subject{
-  constructor(name,semester,level,imgx){
-    this.name = name;
-    this.semester = semester;
-    this.level = level;
-    this.img = imgx;
-    this.x=51;
-    this.y= this.level==0 ? 150 : this.level==1 ? 100 : 50;
-    this.dir=1;
-    this.life= this.level==0 ? 1 : this.level==1 ? 2 : 3;
-    this.speed=this.level==0 ? 2 : this.level==1 ? 4 : 6;
-  }
-  randomGrade(){
-    return int((this.level==0 ? random(24,30) : this.level==1 ? random(18,30) : random(18,24)));
-  }
-  move(){
-    if(this.x>0 && this.x<width-50){
-      this.x+= this.speed*this.dir;
-    }
-    else{
-      this.dir*=-1;
-      this.x+= this.speed*this.dir;
-    }
-    fill('white');
-    text(this.name, this.name.length>10 ? this.x-20:  this.x, this.y);
-    image(this.img, this.x, this.y, 50, 50);
-  }
-}
-class Vlad{
-  constructor(img){
-    this.pointX=0;
-    this.pointY=0;
-    this.dx=0;
-    this.dy=0;
-    this.x=500;
-    this.y=500;
-    this.xscaling=0.75;
-    this.yscaling=0.90;
-    this.slow=0.05;
-    this.score=0;
-    this.crediti=0;
-    this.img=img;
-    this.projectileSpeed=5;
-    this.projectileDamage=1;
-    this.projectileSize=25;
-    this.sec=second();
-  }
-  move(){
-    this.pointX = mouseX;
-    this.pointY = (mouseY>height/2 ? mouseY : this.pointY);
-    this.dx = this.pointX - this.x;
-    this.dy = this.pointY - this.y;
-    this.x += this.dx * this.slow;
-    this.y += this.dy * this.slow;
-    tmp=second();
-    if(tmp!=this.sec){
-      this.sec=tmp;   
-      shoot(this.x, this.y-100*this.yscaling/2,this.projectileSpeed,this.projectileDamage,this.projectileSize);
-    }
-    image(this.img, this.x-100*this.xscaling/2, this.y-100*this.yscaling/2, 100*this.xscaling, 100*this.yscaling);
-  }
+function finish() {
+  song.stop();
+  rick.play();
+  text("Voto: "+(Math.round((vlad.media * 110) / 30)).toString(), 50, 50);
 }
 
-class Projectile{
-  constructor(x,y,speed,damage,size){
-    this.x=x;
-    this.y=y;
-    this.speed=speed;
-    this.damage=damage;
-    this.size=size;
-    this.sec=second();
-  }
-  move(){
-    this.y-=this.speed;
-    circle(this.x,this.y,this.size);
+function gradesShow(){
+  for(i=0;i<grades.length;i++){
+    grades[i].showMe();
   }
 }
