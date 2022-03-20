@@ -1,4 +1,19 @@
-let i, j, k, tmp, actual, song, rick, vlad, img, img1, img2, img3, backgroundImage, subjects = [], projectiles = [], grades = [];
+let i,
+  j,
+  k,
+  tmp,
+  actual,
+  song,
+  rick,
+  vlad,
+  img,
+  img1,
+  img2,
+  img3,
+  backgroundImage,
+  subjects = [],
+  projectiles = [],
+  grades = [];
 let subs = [
   "Geometria&Algebra",
   "Informatica 1",
@@ -26,7 +41,7 @@ let subs = [
   "Tesi",
 ];
 let levels = [
-  0, 1, 2, 0, 1, 2, 2, 0, 1, 1, 2, 0, 0, 1, 2, 0, 1, 1, 2, 0, 0, 1, 1, 0,
+  0, 1, 2, 0, 1, 2, 2, 0, 1, 1, 1, 0, 0, 1, 2, 0, 1, 1, 2, 0, 0, 1, 1, 0,
 ];
 let semesters = [
   1, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 6,
@@ -41,8 +56,8 @@ function preload() {
   img2 = loadImage("img/2.png");
   img3 = loadImage("img/3.png");
   backgroundImage = loadImage("img/backgroundImage.jpg");
-  song = loadSound('assets/song.mp3');
-  rick = loadSound('assets/rick.mp3');
+  song = loadSound("assets/song.mp3");
+  rick = loadSound("assets/rick.mp3");
 }
 
 function initMe() {
@@ -97,8 +112,16 @@ function lifeCheck() {
 
 function hit() {
   for (j = 0; j < projectiles.length; j++) {
-    if(dist(projectiles[j].x,projectiles[j].y,subjects[actual].x,subjects[actual].y)<(projectiles[j].size+subjects[j].size)){
-      subjects[actual].life-=1;
+    if (
+      dist(
+        projectiles[j].x,
+        projectiles[j].y,
+        subjects[actual].x,
+        subjects[actual].y
+      ) <
+      projectiles[j].size + subjects[j].size
+    ) {
+      subjects[actual].life -= 1;
       projectiles.splice(j, 1);
       lifeCheck();
     }
@@ -126,11 +149,15 @@ function shoot(x, y, speed, damage, size) {
 function finish() {
   song.stop();
   rick.play();
-  text("Voto: "+(Math.round((vlad.media * 110) / 30)).toString(), 50, 50);
+  text("Voto: " + (Math.round((vlad.media * 110) / 30) + 3).toString(), 50, 50);
+  setTimeout(
+    (window.location = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"),
+    5000
+  );
 }
 
-function gradesShow(){
-  for(i=0;i<grades.length;i++){
+function gradesShow() {
+  for (i = 0; i < grades.length; i++) {
     grades[i].showMe();
   }
 }

@@ -10,19 +10,23 @@ class Subject {
     this.life = this.level == 0 ? 1 : this.level == 1 ? 2 : 3;
     this.speed = this.level == 0 ? 2 : this.level == 1 ? 4 : 6;
     this.credit = credit;
-    this.size=50;
+    this.size = 50;
     this.voto;
   }
 
   randomGrade() {
-    if(this.name=='Tirocinio' || this.name=='Inglese' || this.name=='Tesi'){
-        return 30;
+    if (
+      this.name == "Tirocinio" ||
+      this.name == "Inglese" ||
+      this.name == "Tesi"
+    ) {
+      return 30;
     }
     return int(
       this.level == 0
-        ? random(24, 30)
+        ? random(25, 30)
         : this.level == 1
-        ? random(22, 28)
+        ? random(22, 30)
         : random(18, 26)
     );
   }
