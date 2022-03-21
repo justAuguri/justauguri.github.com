@@ -121,7 +121,7 @@ function draw() {
 }
 
 function startMe() {
-  song.play();
+  song.loop();
   rick.stop();
   started = true;
   button.hide();
@@ -189,7 +189,7 @@ function shoot(x, y, speed, damage, size, myColor) {
 function finish() {
   if(sentinellaS){
     song.stop();
-    rick.play();
+    rick.loop();
     sentinellaS=false;
   }
   fill('white');
