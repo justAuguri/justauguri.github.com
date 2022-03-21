@@ -25,8 +25,12 @@ class Vlad {
     this.pointY = mouseY > height / 1.5 ? mouseY : this.pointY;
     this.dx = this.pointX - this.x;
     this.dy = this.pointY - this.y;
-    this.x += this.dx * this.slow;
-    this.y += this.dy * this.slow;
+    if(this.x + this.dx * this.slow < width){
+      this.x += this.dx * this.slow;
+    }
+    if(this.y + this.dy * this.slow < height){
+      this.y += this.dy * this.slow;
+    }
     tmp = second();
 
     if (tmp != this.sec) {

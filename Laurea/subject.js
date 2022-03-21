@@ -39,6 +39,7 @@ class Subject {
       this.x += this.speed * this.dir;
     }
     fill("white");
+    textSize(16);
     text(this.name, this.name.length > 10 ? this.x - 20 : this.x, this.y);
     image(this.img, this.x, this.y, this.size, this.size);
   }

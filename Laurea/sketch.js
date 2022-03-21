@@ -11,11 +11,18 @@ let i,
   img2,
   img3,
   backgroundImage,
+  col,
+  button,
+  rickButton,
   subjects = [],
   projectiles = [],
   grades = [],
-  sentinel1 = true;
-  sentinel2 = true;
+  started = false,
+  sentinel1 = true,
+  sentinel2 = true,
+  sentinellaS = true,
+  killS,
+  hitS;
 let subs = [
   "Geometria&Algebra",
   "Informatica 1",
@@ -59,7 +66,9 @@ function preload() {
   img3 = loadImage("img/3.png");
   backgroundImage = loadImage("img/backgroundImage.jpg");
   song = loadSound("assets/song.mp3");
-  rick = loadSound("assets/rick.mp3");
+  rick = loadSound("assets/rick.m4a");
+  hitS = loadSound("assets/hit.wav");
+  killS = loadSound("assets/kill.wav");
 }
 
 function initMe() {
@@ -78,38 +87,65 @@ function initMe() {
 
 function setup() {
   createCanvas(500, 500);
+  createCanvas(windowWidth>windowHeight ? windowHeight : windowWidth, windowWidth>windowHeight ? windowHeight : windowWidth);
   initMe();
-  song.play();
-  rick.stop();
+  background(backgroundImage);
+  col = color(25, 23, 200, 50);
+  button = createButton('Iscrizione Università');
+  button.position(width/2-100, height/3*2);
+  button.mousePressed(startMe);
+  button.size(200);
+  rickButton = color(25, 23, 200, 50);
+  rickButton = createButton('toRick');
+  rickButton.position(width/2-25, height/2);
+  rickButton.mousePressed(toRick);
+  rickButton.size(50);
+  rickButton.hide();
 }
 
 function draw() {
-  background(backgroundImage);
-  if (vlad.crediti >= 180) {
-    finish();
+  if(started){
+    background(backgroundImage);
+    if (vlad.crediti >= 180) {
+      finish();
+    }else{
+      scoreUpdate();
+      vlad.move();
+      subjects[actual].move();
+      projectilesMove();
+      hit();
+      gradesShow();
+      upgrade();
+    }
   }
+}
+
+function startMe() {
+  song.play();
+  rick.stop();
+  started = true;
+  button.hide();
+}
+
+function scoreUpdate(){
   fill("white");
+  textSize(20);
   text(
     "Media: " +
       (Math.round(vlad.media * 100) / 100).toString() +
       "\n" +
       "Crediti:" +
       vlad.crediti.toString(),
-    400,
-    450
+    width - 150,
+    height - 50
   );
-  vlad.move();
-  subjects[actual].move();
-  projectilesMove();
-  hit();
-  gradesShow();
-  upgrade();
 }
 
 function lifeCheck() {
   if (subjects[actual].life <= 0) {
     vlad.calculate(subjects[actual]);
     actual++;
+    killS.play();
   }
 }
 
@@ -125,6 +161,7 @@ function hit() {
       projectiles[j].size + subjects[j].size
     ) {
       subjects[actual].life -= 1;
+      hitS.play();
       projectiles.splice(j, 1);
       lifeCheck();
     }
@@ -150,15 +187,20 @@ function shoot(x, y, speed, damage, size, myColor) {
 }
 
 function finish() {
-  song.stop();
-  rick.play();
+  if(sentinellaS){
+    song.stop();
+    rick.play();
+    sentinellaS=false;
+  }
   fill('white');
+  textSize(40);
   text("Voto: " + (Math.round((vlad.media * 110) / 30) + 5).toString(), 50, 50);
-  setTimeout(
-    (window.location = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"),
-    5000
-  );
+  rickButton.show();  
 } 
+
+function toRick(){
+  window.location = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+}
 
 function upgrade(){
   if(vlad.crediti>=60 && vlad.crediti<120 && sentinel1==true){
