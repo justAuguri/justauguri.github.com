@@ -22,7 +22,7 @@ class Vlad {
 
   move() {
     this.pointX = mouseX;
-    this.pointY = mouseY > height / 1.5 ? mouseY : this.pointY;
+    this.pointY = mouseY > height / 2 ? mouseY : this.pointY;
     this.dx = this.pointX - this.x;
     this.dy = this.pointY - this.y;
     if(this.x + this.dx * this.slow < width){

@@ -22,7 +22,8 @@ let i,
   sentinel2 = true,
   sentinellaS = true,
   killS,
-  hitS;
+  hitS,
+  ms = 0;
 let subs = [
   "Geometria&Algebra",
   "Informatica 1",
@@ -195,12 +196,12 @@ function finish() {
   fill('white');
   textSize(40);
   text("Voto: " + (Math.round((vlad.media * 110) / 30) + 5).toString(), 50, 50);
-  rickButton.show();  
+  rickButton.show();
+  ms++;
+  if(ms>=60*3){
+    toRick();
+  }
 } 
-
-function toRick(){
-  window.location = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-}
 
 function upgrade(){
   if(vlad.crediti>=60 && vlad.crediti<120 && sentinel1==true){
